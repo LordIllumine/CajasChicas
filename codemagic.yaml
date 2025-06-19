@@ -9,11 +9,17 @@ workflows:
       - name: Install dependencies
         script: |
           flutter pub get
-      - name: Build IPA
+      - name: Build archive
         script: |
           flutter build ipa --release --no-codesign
-      - name: Debug build output
+      - name: Export IPA
         script: |
-          ls -R build/ios
+          xcrun xcodebuild -exportArchive \
+            -archivePath build/ios/archive/Runner.xcarchive \
+            -exportPath build/ios/ipa \
+            -exportOptionsPlist exportOptions.plist
+      - name: Debug export output
+        script: |
+          ls -R build/ios/ipa
     artifacts:
       - build/ios/ipa/*.ipa
